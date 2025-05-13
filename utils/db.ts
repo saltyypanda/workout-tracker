@@ -1,10 +1,12 @@
 import * as SQLite from "expo-sqlite";
+import { type SQLiteDatabase } from "expo-sqlite";
 import sampleProgram from "../programs/sampleProgram.json";
 import { Program } from "./types";
 
-const db = await SQLite.openDatabaseAsync("workout.db");
+// const db = await SQLite.openDatabaseAsync("workout.db");
 
-const initDB = async () => {
+const initDB = async (db: SQLiteDatabase) => {
+    console.log("Initializing database...");
   // USERS
   await db.execAsync(`
         CREATE TABLE IF NOT EXISTS users (
@@ -109,9 +111,12 @@ const initDB = async () => {
           FOREIGN KEY (user_id) REFERENCES users(id)
         );
       `);
+
+    await seedDb(db);
+  console.log("Database initialized and seeded.");
 };
 
-const seedDb = async () => {
+const seedDb = async (db: SQLiteDatabase) => {
   const program = sampleProgram as Program;
 
   const programPreparedStatement = await db.prepareAsync(`
@@ -127,9 +132,11 @@ const seedDb = async () => {
     });
 
     console.log("Program Inserted:", res.changes);
+    const firstRow = await db.getFirstAsync('SELECT * FROM programs') as { id: number; title?: string; description?: number };
+    console.log(firstRow.id, firstRow.title, firstRow.description);
   } finally {
     await programPreparedStatement.finalizeAsync();
   }
 };
 
-export { db, initDB, seedDb };
+export { initDB };

@@ -1,9 +1,21 @@
 import { Link, RelativePathString } from "expo-router";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { Image } from "expo-image";
+import { useSQLiteContext } from "expo-sqlite";
+import { useEffect, useState } from "react";
+import { Program } from "@/utils/types";
 
 export default function Index() {
-  const weeks = Array.from({ length: 12 }, (_, i) => i + 1);
+    const db = useSQLiteContext();
+    const [program, setProgram] = useState<Program | null>(null);
+
+    useEffect(() => {
+      const fetchProgram = async () => {
+        const program = await db.getFirstAsync("SELECT * FROM programs");
+        setProgram(program as Program);
+      };
+      fetchProgram();
+    }, []);
 
   return (
     <ScrollView
@@ -18,12 +30,10 @@ export default function Index() {
 
       <View className="w-full justify-center items-center pt-8">
         <Text className="text-3xl text-content font-semibold">
-          Workout Title
+          {program?.title}
         </Text>
-        <Text className="text-lg text-content p-5">
-          Lorem Ipsum has been the industry's standard dummy text ever since the
-          1500s, when an unknown printer took a galley of type and scrambled it
-          to make a type specimen book.
+        <Text className="text-lg text-content p-5 text-center">
+          {program?.description}
         </Text>
       </View>
 
@@ -66,12 +76,8 @@ export default function Index() {
         </Text>
       </View>
 
-      {weeks.map((item) => (
-        <Link
-          key={item}
-          href={`/weeks/${item - 1}` as RelativePathString}
-          asChild
-        >
+      {Array.from({ length: program?.duration_weeks as number }, (_, i) => i + 1).map((item) => (
+        <Link key={item} href={`/weeks/${item}` as RelativePathString} asChild>
           <Pressable className="flex flex-row justify-between items-center w-full bg-secondary my-0.5 px-5 py-4">
             <View className="flex flex-col">
               <Text className="text-lg font-semibold text-content">

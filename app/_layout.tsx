@@ -5,19 +5,19 @@ import { initDB } from "@/utils/db";
 
 export default function RootLayout() {
   return (
-    <Stack
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: "#9B86A7",
-        },
-        headerTintColor: "#ffffff",
-        headerTitleStyle: {
-          fontWeight: "bold",
-        },
-        headerBackTitle: "Back",
-      }}
-    >
-      <SQLiteProvider databaseName="db" onInit={initDB}>
+    <SQLiteProvider databaseName="db" onInit={initDB}>
+      <Stack
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: "#9B86A7",
+          },
+          headerTintColor: "#ffffff",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+          headerBackTitle: "Back",
+        }}
+      >
         <Stack.Screen
           name="index"
           options={{ headerShown: true, title: "Workout Tracker" }}
@@ -26,7 +26,7 @@ export default function RootLayout() {
           name="weeks/[id]"
           options={{ headerShown: true, title: "Week" }}
         />
-      </SQLiteProvider>
-    </Stack>
+      </Stack>
+    </SQLiteProvider>
   );
 }
