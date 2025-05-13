@@ -5,19 +5,16 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: "#030014", // blue-800
-        secondary: "#151212", // yellow-400
-        accent: "#AB8BFF", // pink-400
-        light: {
-          100: "#D6C7FF",
-          200: "A8bFDB",
-          300: "#9CA4AB"
-        },
-        dark: {
-          100: "#221F3D",
-          200: "#0F0D23",
-        },
-      }
+        primary: "#9B86A7",
+        secondary: "#746885",
+        accent: "#FFB6B9",
+        highlight: "#B5F8FE",
+        neutral: "#F0F0F0",
+        text: "#333333",
+        content: "#FAFAFA",
+        lightcontent: "#F5D5EA",
+        mutedcontent: "#D6D3E0",
+      },
     },
     },
   plugins: [],

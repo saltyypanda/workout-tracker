@@ -3,7 +3,8 @@ import "./globals.css"
 
 export default function RootLayout() {
   return (<Stack>
-    <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-    <Stack.Screen name="movie/[id]" options={{ headerShown: false }} />
+    <Stack.Screen name="index" options={{ headerShown: true }} />
+    {/* <Stack.Screen name="(tabs)" options={{ headerShown: false }} /> */}
+    <Stack.Screen name="weeks/[id]" options={{ headerShown: false }} />
   </Stack>);
 }
