@@ -1,5 +1,5 @@
 import { Link, RelativePathString } from "expo-router";
-import { Pressable, ScrollView, Text, View, FlatList } from "react-native";
+import { Pressable, ScrollView, Text, View } from "react-native";
 import { Image } from "expo-image";
 
 export default function Index() {
@@ -13,10 +13,10 @@ export default function Index() {
       <Image
         source={require("@/assets/images/pixel-background.png")}
         contentFit="cover"
-        style={{ width: "100%", height: "20%" }}
+        style={{ width: "100%", height: 200 }}
       />
 
-      <View className="flex w-full justify-center items-center font-bold pt-8">
+      <View className="w-full justify-center items-center pt-8">
         <Text className="text-3xl text-content font-semibold">
           Workout Title
         </Text>
@@ -27,7 +27,7 @@ export default function Index() {
         </Text>
       </View>
 
-      <View className="flex w-full p-5">
+      <View className="w-full p-5">
         <Text className="text-xl text-content font-semibold">Progress</Text>
       </View>
 
@@ -60,34 +60,33 @@ export default function Index() {
         </View>
       ))}
 
-      <View className="flex w-full p-5">
+      <View className="w-full p-5">
         <Text className="text-xl text-content font-semibold">
           Start your workout!
         </Text>
       </View>
 
-      {/* Weeks List */}
-      <FlatList
-        data={weeks}
-        keyExtractor={(item) => `week-${item}`}
-        scrollEnabled={false} // Let ScrollView handle scrolling
-        className="w-full"
-        renderItem={({ item }) => (
-          <Link href={`/weeks/${item - 1}` as RelativePathString} asChild>
-            <Pressable
-              onPress={() => console.log(`Week ${item} pressed`)}
-              className="w-full bg-secondary my-0.5 px-5 py-4"
-            >
-              <View className="flex flex-col w-full">
-                <Text className="text-lg font-semibold text-content">
-                  Week {item}
-                </Text>
-                <Text className="text-lg text-mutedcontent">0/7 Completed</Text>
-              </View>
-            </Pressable>
-          </Link>
-        )}
-      />
+      {weeks.map((item) => (
+        <Link
+          key={item}
+          href={`/weeks/${item - 1}` as RelativePathString}
+          asChild
+        >
+          <Pressable className="flex flex-row justify-between items-center w-full bg-secondary my-0.5 px-5 py-4">
+            <View className="flex flex-col">
+              <Text className="text-lg font-semibold text-content">
+                Week {item}
+              </Text>
+              <Text className="text-lg text-mutedcontent">0/7 Completed</Text>
+            </View>
+            <Image
+              source={require("@/assets/icons/chevron-right.svg")}
+              contentFit="cover"
+              style={{ width: 30, height: 30 }}
+            />
+          </Pressable>
+        </Link>
+      ))}
     </ScrollView>
   );
 }

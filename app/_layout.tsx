@@ -12,10 +12,11 @@ export default function RootLayout() {
         headerTitleStyle: {
           fontWeight: "bold",
         },
+        headerBackTitle: "Back",
       }}
     >
       <Stack.Screen name="index" options={{ headerShown: true, title: "Workout Tracker" }} />
-      <Stack.Screen name="weeks/[id]" options={{ headerShown: true }} />
+      <Stack.Screen name="weeks/[id]" options={{ headerShown: true, title: "Week" }} />
     </Stack>
   );
 }
