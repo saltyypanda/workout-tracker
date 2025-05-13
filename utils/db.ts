@@ -112,6 +112,7 @@ const initDB = async (db: SQLiteDatabase) => {
         );
       `);
 
+    await clearDb(db);
     await seedDb(db);
   console.log("Database initialized and seeded.");
 };
@@ -138,5 +139,24 @@ const seedDb = async (db: SQLiteDatabase) => {
     await programPreparedStatement.finalizeAsync();
   }
 };
+
+const clearDb = async (db: SQLiteDatabase) => {
+    const tables = [
+      "completions",
+      "progress",
+      "sets",
+      "routines",
+      "exercises",
+      "days",
+      "weeks",
+      "programs",
+      "users"
+    ];
+  
+    for (const table of tables) {
+      await db.execAsync(`DELETE FROM ${table};`);
+    }
+    console.log("Database cleared.");
+  };  
 
 export { initDB };

@@ -1,7 +1,8 @@
+// app/_layout.tsx
 import { Stack } from "expo-router";
-import "./globals.css";
 import { SQLiteProvider } from "expo-sqlite";
 import { initDB } from "@/utils/db";
+import "./globals.css";
 
 export default function RootLayout() {
   return (
@@ -23,8 +24,8 @@ export default function RootLayout() {
           options={{ headerShown: true, title: "Workout Tracker" }}
         />
         <Stack.Screen
-          name="weeks/[id]"
-          options={{ headerShown: true, title: "Week" }}
+          name="programs/[programId]"
+          options={{ headerShown: true }}
         />
       </Stack>
     </SQLiteProvider>
