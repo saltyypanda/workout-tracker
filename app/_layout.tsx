@@ -1,5 +1,7 @@
 import { Stack } from "expo-router";
 import "./globals.css";
+import { SQLiteProvider } from "expo-sqlite";
+import { initDB } from "@/utils/db";
 
 export default function RootLayout() {
   return (
@@ -15,8 +17,16 @@ export default function RootLayout() {
         headerBackTitle: "Back",
       }}
     >
-      <Stack.Screen name="index" options={{ headerShown: true, title: "Workout Tracker" }} />
-      <Stack.Screen name="weeks/[id]" options={{ headerShown: true, title: "Week" }} />
+      <SQLiteProvider databaseName="db" onInit={initDB}>
+        <Stack.Screen
+          name="index"
+          options={{ headerShown: true, title: "Workout Tracker" }}
+        />
+        <Stack.Screen
+          name="weeks/[id]"
+          options={{ headerShown: true, title: "Week" }}
+        />
+      </SQLiteProvider>
     </Stack>
   );
 }

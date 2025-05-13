@@ -1,0 +1,39 @@
+{
+    "title": "12-Week Full Body Guide",
+    "description": "A structured 12-week program to build strength and endurance.",
+    "duration_weeks": 12,
+    "weeks": [
+      {
+        "week_number": 1,
+        "days": [
+          {
+            "day_number": 1,
+            "title": "Full Body Intro",
+            "routine": [
+              {
+                "exercise": {
+                  "name": "Bodyweight Squat",
+                  "description": "A basic lower-body strength exercise."
+                },
+                "sets": [
+                  { "type": "rep", "target": "12-15 reps" },
+                  { "type": "rep", "target": "12-15 reps" }
+                ]
+              },
+              {
+                "exercise": {
+                  "name": "Push-Up",
+                  "description": "Upper-body push movement."
+                },
+                "sets": [
+                  { "type": "rep", "target": "10-12 reps" },
+                  { "type": "rep", "target": "AMRAP" }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+  
