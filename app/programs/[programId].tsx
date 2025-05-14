@@ -5,7 +5,7 @@ import {
   useNavigation,
 } from "expo-router";
 import { Pressable, ScrollView, Text, View } from "react-native";
-import { Image } from "expo-image";
+import { Image } from "react-native";
 import { useSQLiteContext } from "expo-sqlite";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { Program } from "@/utils/types";
@@ -39,11 +39,10 @@ export default function ProgramScreen() {
       contentContainerStyle={{ alignItems: "center", paddingBottom: 100 }}
     >
       <Image
-        source={require("@/assets/images/pixel-background.png")}
-        contentFit="cover"
-        style={{ width: "100%", height: 200 }}
+        source={{ uri: program?.cover_uri }}
+        style={{ width: "100%", height: 300 }}
+        resizeMode="cover"
       />
-
       <View className="w-full justify-center items-center pt-8">
         <Text className="text-3xl text-content font-semibold">
           {program?.title}
@@ -106,7 +105,6 @@ export default function ProgramScreen() {
             </View>
             <Image
               source={require("@/assets/icons/chevron-right.svg")}
-              contentFit="cover"
               style={{ width: 30, height: 30 }}
             />
           </Pressable>

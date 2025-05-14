@@ -3,10 +3,34 @@ import { type SQLiteDatabase } from "expo-sqlite";
 import sampleProgram from "../programs/sampleProgram.json";
 import { Program } from "./types";
 
-// const db = await SQLite.openDatabaseAsync("workout.db");
+const initDB = async (db: SQLite.SQLiteDatabase) => {
+  await resetDatabase(db);
+  await buildDatabase(db);
+  await seedDatabase(db);
+};
 
-const initDB = async (db: SQLiteDatabase) => {
-    console.log("Initializing database...");
+const resetDatabase = async (db: SQLite.SQLiteDatabase) => {
+  const tables = [
+    "completions",
+    "progress",
+    "sets",
+    "routines",
+    "exercises",
+    "days",
+    "weeks",
+    "programs",
+    "users",
+  ];
+
+  for (const table of tables) {
+    await db.execAsync(`DROP TABLE IF EXISTS ${table};`);
+  }
+
+  console.log("All tables dropped.");
+};
+
+const buildDatabase = async (db: SQLiteDatabase) => {
+  console.log("Building database...");
   // USERS
   await db.execAsync(`
         CREATE TABLE IF NOT EXISTS users (
@@ -24,7 +48,8 @@ const initDB = async (db: SQLiteDatabase) => {
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           title TEXT,
           description TEXT,
-          duration_weeks INTEGER
+          duration_weeks INTEGER,
+          cover_uri TEXT
         );
       `);
 
@@ -111,52 +136,46 @@ const initDB = async (db: SQLiteDatabase) => {
           FOREIGN KEY (user_id) REFERENCES users(id)
         );
       `);
-
-    await clearDb(db);
-    await seedDb(db);
-  console.log("Database initialized and seeded.");
 };
 
-const seedDb = async (db: SQLiteDatabase) => {
+const seedDatabase = async (db: SQLiteDatabase) => {
+  console.log("Seeding database...");
   const program = sampleProgram as Program;
 
   const programPreparedStatement = await db.prepareAsync(`
-        INSERT INTO programs (title, description, duration_weeks)
-        VALUES ($title, $description, $duration_weeks);
+        INSERT INTO programs (title, description, duration_weeks, cover_uri)
+        VALUES ($title, $description, $duration_weeks, $cover_uri);
     `);
 
   try {
-    let res = await programPreparedStatement.executeAsync({
+    await programPreparedStatement.executeAsync({
       $title: program.title,
       $description: program.description,
       $duration_weeks: program.duration_weeks,
+      $cover_uri: program.cover_uri,
     });
-
-    console.log("Program Inserted:", res.changes);
-    const firstRow = await db.getFirstAsync('SELECT * FROM programs') as { id: number; title?: string; description?: number };
-    console.log(firstRow.id, firstRow.title, firstRow.description);
   } finally {
     await programPreparedStatement.finalizeAsync();
   }
 };
 
-const clearDb = async (db: SQLiteDatabase) => {
-    const tables = [
-      "completions",
-      "progress",
-      "sets",
-      "routines",
-      "exercises",
-      "days",
-      "weeks",
-      "programs",
-      "users"
-    ];
-  
-    for (const table of tables) {
-      await db.execAsync(`DELETE FROM ${table};`);
-    }
-    console.log("Database cleared.");
-  };  
+const clearDatabase = async (db: SQLiteDatabase) => {
+  const tables = [
+    "completions",
+    "progress",
+    "sets",
+    "routines",
+    "exercises",
+    "days",
+    "weeks",
+    "programs",
+    "users",
+  ];
+
+  for (const table of tables) {
+    await db.execAsync(`DELETE FROM ${table};`);
+  }
+  console.log("Database cleared.");
+};
 
 export { initDB };

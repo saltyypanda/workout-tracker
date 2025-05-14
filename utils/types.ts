@@ -29,6 +29,7 @@ export type Set = {
     title: string;
     description: string;
     duration_weeks: number;
+    cover_uri: string;
     weeks: Week[];
   };
   

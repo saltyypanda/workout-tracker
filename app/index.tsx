@@ -1,53 +1,53 @@
-import { View, Text, Dimensions } from "react-native";
+import { View, Text, Dimensions, Image } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 import { useSQLiteContext } from "expo-sqlite";
 import { useEffect, useState } from "react";
 import { Link } from "expo-router";
+import { type Program } from "@/utils/types";
 
-const width = Dimensions.get("window").width;
-
-type Program = {
-  id: number;
-  title: string;
-  description: string;
-};
+const { width, height } = Dimensions.get("window");
 
 export default function ProgramCarouselScreen() {
   const db = useSQLiteContext();
   const [programs, setPrograms] = useState<Program[]>([]);
 
   useEffect(() => {
-      const fetchPrograms = async () => {
-        const result = await db.getAllAsync("SELECT * FROM programs");
-        const programsData = result as Program[];
-        console.log("Fetched new programs:", programsData.length);
-        setPrograms(programsData);
-      };
-      fetchPrograms();
-    }, []);
+    const fetchPrograms = async () => {
+      const result = await db.getAllAsync("SELECT * FROM programs LIMIT 10");
+      const programsData = result as Program[];
+      setPrograms(programsData);
+    };
+    fetchPrograms();
+  }, []);
 
   return (
     <View className="flex-1 items-center justify-center bg-primary">
       {programs.length > 0 && (
         <Carousel
-          width={width * 0.9}
-          height={300}
+          width={width}
+          height={height}
           data={programs}
           renderItem={({ item }) => (
-            <View className="p-5 bg-secondary rounded-xl shadow-md h-full">
-              <Text className="text-2xl text-content font-bold mb-2">
+            <View className="flex flex-col items-center justify-center gap-8 p-5 h-full">
+              <Image
+                source={{ uri: item.cover_uri }}
+                style={{ width: "100%", height: 300 }}
+                resizeMode="cover"
+              />
+              <Text className="text-4xl text-content font-bold mb-2 text-center">
                 {item.title}
               </Text>
-              <Text className="text-base text-mutedcontent">
+              <Text className="text-lg text-mutedcontent text-center">
                 {item.description}
               </Text>
 
-              <Link href={`/programs/${item.id}`}>
-                <View className="mt-4 bg-content rounded-lg p-3">
-                  <Text className="text-secondary font-semibold text-center">
-                    View Program
-                  </Text>
-                </View>
+              <Link
+                href={`/programs/${item.id}`}
+                className="mt-4 bg-secondary rounded-lg p-3 mx-auto w-3/4"
+              >
+                <Text className="text-xl text-content font-semibold text-center">
+                  View Program
+                </Text>
               </Link>
             </View>
           )}
