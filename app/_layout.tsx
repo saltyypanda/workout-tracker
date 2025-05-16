@@ -27,6 +27,10 @@ export default function RootLayout() {
           name="programs/[programId]"
           options={{ headerShown: true }}
         />
+        <Stack.Screen
+          name="programs/[id]"
+          options={{ headerShown: true }}
+        />
       </Stack>
     </SQLiteProvider>
   );

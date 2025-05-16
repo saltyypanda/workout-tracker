@@ -4,8 +4,7 @@ import {
   useLocalSearchParams,
   useNavigation,
 } from "expo-router";
-import { Pressable, ScrollView, Text, View } from "react-native";
-import { Image } from "react-native";
+import { Pressable, ScrollView, Text, View, Image } from "react-native";
 import { useSQLiteContext } from "expo-sqlite";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { Program } from "@/utils/types";
@@ -28,6 +27,7 @@ export default function ProgramScreen() {
   }, [programId]);
 
   useLayoutEffect(() => {
+    console.log("ProgramScreen: ", programId);
     navigation.setOptions({
       title: program?.title,
     });
@@ -95,7 +95,7 @@ export default function ProgramScreen() {
         { length: program?.duration_weeks as number },
         (_, i) => i + 1
       ).map((item) => (
-        <Link key={item} href={`/weeks/${item}` as RelativePathString} asChild>
+        <Link key={item} href={`/programs/${programId}/weeks/${item}` as RelativePathString} asChild>
           <Pressable className="flex flex-row justify-between items-center w-full bg-secondary my-0.5 px-5 py-4">
             <View className="flex flex-col">
               <Text className="text-lg font-semibold text-content">
