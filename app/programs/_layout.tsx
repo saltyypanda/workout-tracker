@@ -1,6 +1,6 @@
 import { Stack } from "expo-router";
 
-export default function DayLayout() {
+export default function ProgramLayout() {
   return (
     <Stack
       screenOptions={{
@@ -12,6 +12,7 @@ export default function DayLayout() {
         headerTitleStyle: { fontWeight: "bold" },
         headerBackTitle: "Back",
       }}
-    />
+    >
+    </Stack>
   );
 }

@@ -1,9 +1,9 @@
-import { Link, useLocalSearchParams, useNavigation } from "expo-router";
+import { Link, RelativePathString, useLocalSearchParams, useNavigation } from "expo-router";
 import { useLayoutEffect } from "react";
 import { Pressable, ScrollView, Text, View, Image } from "react-native";
 
 export default function WeekScreen() {
-  const { weekId } = useLocalSearchParams();
+  const { id, weekId } = useLocalSearchParams();
   const navigation = useNavigation();
 
   useLayoutEffect(() => {
@@ -24,16 +24,16 @@ export default function WeekScreen() {
         </Text>
       </View>
 
-      {Array.from(
-        { length: 7 },
-        (_, i) => i + 1
-      ).map((item) => (
-        // <Link
-        //   key={item}
-        //   href={`/programs/${programId}/weeks/${item}` as RelativePathString}
-        //   asChild
-        // >
-          <Pressable className="flex flex-row justify-between items-center w-full bg-secondary my-0.5 px-5 py-4" key={item}>
+      {Array.from({ length: 7 }, (_, i) => i + 1).map((item) => (
+        <Link
+          key={item}
+          href={`/programs/${id}/weeks/${weekId}/${item}` as RelativePathString}
+          asChild
+        >
+          <Pressable
+            className="flex flex-row justify-between items-center w-full bg-secondary my-0.5 px-5 py-4"
+            key={item}
+          >
             <View className="flex flex-col">
               <Text className="text-lg font-semibold text-content">
                 Day {item}
@@ -45,7 +45,7 @@ export default function WeekScreen() {
               style={{ width: 30, height: 30 }}
             />
           </Pressable>
-        // </Link>
+        </Link>
       ))}
     </ScrollView>
   );

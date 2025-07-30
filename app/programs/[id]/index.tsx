@@ -12,26 +12,26 @@ import { Program } from "@/utils/types";
 export default function ProgramScreen() {
   const db = useSQLiteContext();
   const [program, setProgram] = useState<Program | null>(null);
-  const { programId } = useLocalSearchParams();
+  const { id } = useLocalSearchParams();
   const navigation = useNavigation();
 
   useEffect(() => {
     const fetchProgram = async () => {
       const program = await db.getFirstAsync(
-        "SELECT * FROM programs WHERE id = $programId",
-        [programId as string]
+        "SELECT * FROM programs WHERE id = $id",
+        [id as string]
       );
       setProgram(program as Program);
     };
     fetchProgram();
-  }, [programId]);
+  }, [id]);
 
   useLayoutEffect(() => {
-    console.log("ProgramScreen: ", programId);
+    console.log("ProgramScreen: ", id);
     navigation.setOptions({
       title: program?.title,
     });
-  }, [navigation, programId, program]);
+  }, [navigation, id, program]);
 
   return (
     <ScrollView
@@ -95,7 +95,7 @@ export default function ProgramScreen() {
         { length: program?.duration_weeks as number },
         (_, i) => i + 1
       ).map((item) => (
-        <Link key={item} href={`/programs/${programId}/weeks/${item}` as RelativePathString} asChild>
+        <Link key={item} href={`/programs/${id}/weeks/${item}` as RelativePathString} asChild>
           <Pressable className="flex flex-row justify-between items-center w-full bg-secondary my-0.5 px-5 py-4">
             <View className="flex flex-col">
               <Text className="text-lg font-semibold text-content">

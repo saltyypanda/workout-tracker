@@ -2,7 +2,7 @@ import { View, Text, Dimensions, Image } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 import { useSQLiteContext } from "expo-sqlite";
 import { useEffect, useState } from "react";
-import { Link } from "expo-router";
+import { Link, RelativePathString } from "expo-router";
 import { type Program } from "@/utils/types";
 
 const { width, height } = Dimensions.get("window");
@@ -42,7 +42,7 @@ export default function ProgramCarouselScreen() {
               </Text>
 
               <Link
-                href={`/programs/${item.id}`}
+                href={`/programs/${item.id}` as RelativePathString}
                 className="mt-4 bg-secondary rounded-lg p-3 mx-auto w-3/4"
               >
                 <Text className="text-xl text-content font-semibold text-center">
