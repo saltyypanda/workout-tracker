@@ -7,29 +7,49 @@ import {
 import { Pressable, ScrollView, Text, View, Image } from "react-native";
 import { useSQLiteContext } from "expo-sqlite";
 import { useEffect, useLayoutEffect, useState } from "react";
-import { Program } from "@/utils/types";
+import { Program, Week } from "@/utils/types";
 
 export default function ProgramScreen() {
   const db = useSQLiteContext();
   const [program, setProgram] = useState<Program | null>(null);
+  const [weeks, setWeeks] = useState<Week[] | null>(null);
   const { id } = useLocalSearchParams();
   const navigation = useNavigation();
 
   useEffect(() => {
-    const fetchProgram = async () => {
+    const fetchProgramAndWeeks = async () => {
       const program = await db.getFirstAsync(
         "SELECT * FROM programs WHERE id = $id",
         [id as string]
       );
+
+      if (!program) {
+        navigation.goBack(); // TODO: throw some error
+        return;
+      }
+
       setProgram(program as Program);
+
+      const weeks = await db.getAllAsync(
+        "SELECT * FROM weeks WHERE program_id = $id",
+        { $id: id as string }
+      );
+
+      if (!weeks) {
+        navigation.goBack(); // TODO: throw some error
+        return;
+      }
+
+      setWeeks(weeks as Week[]);
     };
-    fetchProgram();
+
+    fetchProgramAndWeeks();
   }, [id]);
 
   useLayoutEffect(() => {
     console.log("ProgramScreen: ", id);
     navigation.setOptions({
-      title: program?.title,
+      title: "UPPERCASE PROGRAM TITLE",
     });
   }, [navigation, id, program]);
 
@@ -91,25 +111,27 @@ export default function ProgramScreen() {
         </Text>
       </View>
 
-      {Array.from(
-        { length: program?.duration_weeks as number },
-        (_, i) => i + 1
-      ).map((item) => (
-        <Link key={item} href={`/programs/${id}/weeks/${item}` as RelativePathString} asChild>
-          <Pressable className="flex flex-row justify-between items-center w-full bg-secondary my-0.5 px-5 py-4">
-            <View className="flex flex-col">
-              <Text className="text-lg font-semibold text-content">
-                Week {item}
-              </Text>
-              <Text className="text-lg text-mutedcontent">0/7 Completed</Text>
-            </View>
-            <Image
-              source={require("@/assets/icons/chevron-right.svg")}
-              style={{ width: 30, height: 30 }}
-            />
-          </Pressable>
-        </Link>
-      ))}
+      {weeks &&
+        weeks.map((week) => (
+          <Link
+            key={`link_week_${week.week_number}`}
+            href={`/programs/${id}/weeks/${week.id}` as RelativePathString}
+            asChild
+          >
+            <Pressable className="flex flex-row justify-between items-center w-full bg-secondary my-0.5 px-5 py-4">
+              <View className="flex flex-col">
+                <Text className="text-lg font-semibold text-content">
+                  Week {week.week_number}
+                </Text>
+                <Text className="text-lg text-mutedcontent">0/7 Completed</Text>
+              </View>
+              <Image
+                source={require("@/assets/icons/chevron-right.svg")}
+                style={{ width: 30, height: 30 }}
+              />
+            </Pressable>
+          </Link>
+        ))}
     </ScrollView>
   );
 }
