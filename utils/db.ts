@@ -1,7 +1,7 @@
 import * as SQLite from "expo-sqlite";
 import { type SQLiteDatabase } from "expo-sqlite";
 import sampleProgram from "../programs/sampleProgram.json";
-import { Program } from "./types";
+import { Exercise, Program } from "./types";
 
 const initDB = async (db: SQLite.SQLiteDatabase) => {
   await resetDatabase(db);
@@ -142,21 +142,71 @@ const seedDatabase = async (db: SQLiteDatabase) => {
   console.log("Seeding database...");
   const program = sampleProgram as Program;
 
-  const programPreparedStatement = await db.prepareAsync(`
-        INSERT INTO programs (title, description, duration_weeks, cover_uri)
-        VALUES ($title, $description, $duration_weeks, $cover_uri);
-    `);
+  // Insert program
+  const programResult = await db.runAsync(
+    `INSERT INTO programs (title, description, duration_weeks, cover_uri)
+     VALUES (?, ?, ?, ?);`,
+    [program.title, program.description, program.cover_uri]
+  );
+  const programId = programResult.lastInsertRowId;
 
-  try {
-    await programPreparedStatement.executeAsync({
-      $title: program.title,
-      $description: program.description,
-      $duration_weeks: program.duration_weeks,
-      $cover_uri: program.cover_uri,
-    });
-  } finally {
-    await programPreparedStatement.finalizeAsync();
+  for (const week of program.weeks) {
+    // Insert week
+    const weekResult = await db.runAsync(
+      `INSERT INTO weeks (program_id, week_number) VALUES (?, ?);`,
+      [programId, week.week_number]
+    );
+    const weekId = weekResult.lastInsertRowId;
+
+    for (const day of week.days) {
+      // Insert day
+      const dayResult = await db.runAsync(
+        `INSERT INTO days (week_id, day_number, title) VALUES (?, ?, ?);`,
+        [weekId, day.day_number, day.title]
+      );
+      const dayId = dayResult.lastInsertRowId;
+
+      for (let i = 0; i < day.routine.length; i++) {
+        const routineItem = day.routine[i];
+        const { name, description } = routineItem.exercise;
+
+        // Check if exercise already exists
+        let exerciseId: number;
+        const existingExercise = await db.getFirstAsync(
+          `SELECT id FROM exercises WHERE name = ?`,
+          [name]
+        );
+
+        if (existingExercise) {
+          exerciseId = (existingExercise as Exercise).id;
+        } else {
+          const exerciseResult = await db.runAsync(
+            `INSERT INTO exercises (name, description) VALUES (?, ?);`,
+            [name, description]
+          );
+          exerciseId = exerciseResult.lastInsertRowId;
+        }
+
+        // Insert routine
+        const routineResult = await db.runAsync(
+          `INSERT INTO routines (day_id, exercise_id, position) VALUES (?, ?, ?);`,
+          [dayId, exerciseId, i]
+        );
+        const routineId = routineResult.lastInsertRowId;
+
+        // Insert sets
+        for (let j = 0; j < routineItem.sets.length; j++) {
+          const set = routineItem.sets[j];
+          await db.runAsync(
+            `INSERT INTO sets (routine_id, set_number, type, target) VALUES (?, ?, ?, ?);`,
+            [routineId, j + 1, set.type, set.target]
+          );
+        }
+      }
+    }
   }
+
+  console.log("Sample program inserted!");
 };
 
 const clearDatabase = async (db: SQLiteDatabase) => {
