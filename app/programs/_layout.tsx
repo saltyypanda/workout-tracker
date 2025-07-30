@@ -12,7 +12,6 @@ export default function ProgramLayout() {
         headerTitleStyle: { fontWeight: "bold" },
         headerBackTitle: "Back",
       }}
-    >
-    </Stack>
+    />
   );
 }

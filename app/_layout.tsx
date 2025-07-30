@@ -9,6 +9,7 @@ export default function RootLayout() {
     <SQLiteProvider databaseName="db" onInit={initDB}>
       <Stack
         screenOptions={{
+          headerShown: true,
           headerStyle: {
             backgroundColor: "#9B86A7",
           },
@@ -18,20 +19,7 @@ export default function RootLayout() {
           },
           headerBackTitle: "Back",
         }}
-      >
-        <Stack.Screen
-          name="index"
-          options={{ headerShown: true, title: "Workout Tracker" }}
-        />
-        <Stack.Screen
-          name="programs/[programId]"
-          options={{ headerShown: true }}
-        />
-        <Stack.Screen
-          name="programs/[id]"
-          options={{ headerShown: true }}
-        />
-      </Stack>
+      />
     </SQLiteProvider>
   );
 }
