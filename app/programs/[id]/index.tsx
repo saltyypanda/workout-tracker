@@ -125,10 +125,18 @@ export default function ProgramScreen() {
                 </Text>
                 <Text className="text-lg text-mutedcontent">0/7 Completed</Text>
               </View>
-              <Image
-                source={require("@/assets/icons/chevron-right.svg")}
-                style={{ width: 30, height: 30 }}
-              />
+              <View className="flex flex-row gap-8 justify-end">
+                {week.completed &&
+                  <Image
+                  source={require("@/assets/icons/check-circle.svg")}
+                  style={{ width: 30, height: 30 }}
+                />
+                }
+                <Image
+                  source={require("@/assets/icons/chevron-right.svg")}
+                  style={{ width: 30, height: 30 }}
+                />
+              </View>
             </Pressable>
           </Link>
         ))}

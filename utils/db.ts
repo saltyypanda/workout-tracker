@@ -59,6 +59,7 @@ const buildDatabase = async (db: SQLiteDatabase) => {
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           program_id INTEGER,
           week_number INTEGER,
+          completed INTEGER,
           FOREIGN KEY (program_id) REFERENCES programs(id)
         );
       `);
@@ -70,6 +71,7 @@ const buildDatabase = async (db: SQLiteDatabase) => {
           week_id INTEGER,
           day_number INTEGER,
           title TEXT,
+          completed INTEGER,
           FOREIGN KEY (week_id) REFERENCES weeks(id)
         );
       `);
@@ -153,16 +155,16 @@ const seedDatabase = async (db: SQLiteDatabase) => {
   for (const week of program.weeks) {
     // Insert week
     const weekResult = await db.runAsync(
-      `INSERT INTO weeks (program_id, week_number) VALUES (?, ?);`,
-      [programId, week.week_number]
+      `INSERT INTO weeks (program_id, week_number, completed) VALUES (?, ?, ?);`,
+      [programId, week.week_number, week.completed]
     );
     const weekId = weekResult.lastInsertRowId;
 
     for (const day of week.days) {
       // Insert day
       const dayResult = await db.runAsync(
-        `INSERT INTO days (week_id, day_number, title) VALUES (?, ?, ?);`,
-        [weekId, day.day_number, day.title]
+        `INSERT INTO days (week_id, day_number, title, completed) VALUES (?, ?, ?, ?);`,
+        [weekId, day.day_number, day.title, day.completed]
       );
       const dayId = dayResult.lastInsertRowId;
 
