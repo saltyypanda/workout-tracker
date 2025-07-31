@@ -21,16 +21,18 @@ export type Day = {
   day_number: number;
   title: string;
   routine: RoutineItem[];
+  completed: boolean;
 };
 
 export type Week = {
   id: number;
   week_number: number;
   days: Day[];
+  completed: boolean;
 };
 
 export type Program = {
-  id: number;
+  id?: number;
   title: string;
   description: string;
   cover_uri: string;

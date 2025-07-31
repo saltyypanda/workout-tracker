@@ -5,10 +5,12 @@
     "weeks": [
       {
         "week_number": 1,
+        "completed": true,
         "days": [
           {
             "day_number": 1,
             "title": "Full Body Intro",
+            "completed": true,
             "routine": [
               {
                 "exercise": {
