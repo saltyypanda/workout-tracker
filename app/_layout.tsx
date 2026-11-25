@@ -19,7 +19,10 @@ export default function RootLayout() {
           },
           headerBackTitle: "Back",
         }}
-      />
+      >
+        <Stack.Screen name="index" options={{ title: "Programs" }} />
+        <Stack.Screen name="programs" options={{ title: "Program" }} />
+      </Stack>
     </SQLiteProvider>
   );
 }

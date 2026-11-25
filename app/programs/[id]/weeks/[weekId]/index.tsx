@@ -84,7 +84,7 @@ export default function WeekScreen() {
                 <Text className="text-lg text-mutedcontent">60 minutes</Text>
               </View>
               <View className="flex flex-row gap-8 justify-end">
-                {day.completed && (
+                {!!day.completed && (
                   <Image
                     source={require("@/assets/icons/check-circle.svg")}
                     style={{ width: 30, height: 30 }}

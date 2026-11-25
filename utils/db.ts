@@ -148,7 +148,7 @@ const seedDatabase = async (db: SQLiteDatabase) => {
   const programResult = await db.runAsync(
     `INSERT INTO programs (title, description, duration_weeks, cover_uri)
      VALUES (?, ?, ?, ?);`,
-    [program.title, program.description, program.cover_uri]
+    [program.title, program.description, program.weeks.length, program.cover_uri]
   );
   const programId = programResult.lastInsertRowId;
 
